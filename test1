@@ -1,0 +1,13 @@
+create extension postgis;
+
+shp2pgsql -D -s 4326 -G -a -n USA_161H0_CA_POSTAL_CODE.shp | head -50 
+shp2pgsql -D -s 4326 -G -a -n USA_161H0_CA_POSTAL_CODE.shp | psql geo-test
+psql geo-test
+
+\d
+\d usa_161h0_ca_postal_code
+select * from usa_161h0_ca_postal_code limit 5
+select *, st_asewkt(geog) from usa_161h0_ca_postal_code limit 5; #to convert from binary to normal LONG/LAT
+select * from usa_161h0_ca_postal_code where st_dwithin(geog, st_geogfromtext('SRID=4326;POINT(-118.24074 33.94374)'), 1000);
+explain select * from usa_161h0_ca_postal_code where st_dwithin(geog, st_geogfromtext('SRID=4326;POINT(-118.24074 33.94374)'), 100);
+select *, st_asewkt(geog) from usa_161h0_ca_postal_code limit 5;
